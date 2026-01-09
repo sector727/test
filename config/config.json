@@ -1,8 +1,108 @@
 {
-    "bot": {
-        "token": ""
-    },
-    "categories": {},
-    "channels": {},
-    "roles": {}
+  "bot": {
+    "token": ""
+  },
+
+  "categories": {
+    "GENERAL": "1459276221450364988",
+    "TICKETS": "1459275267091595488",
+    "VIP_ACCESS": "1459298169132417187",
+    "STAFF": "1459274597055856740",
+    "LOGS": "1459276743230881976",
+    "SYSTEM": "1459274151666647040"
+  },
+
+  "channels": {
+    "welcome": "1459276350933434429",
+    "rules": "1459276385574195270",
+    "announcements": "1459276463097511946",
+
+    "ticket_panel": "1459275477817757936",
+
+    "mod_chat": "1459274707269320785",
+    "mod_queue": "1459274791977484352",
+    "approvals": "1459274857501167709",
+    "escalations": "1459275001403408645",
+    "staff_notes": "1459275057095250124",
+
+    "moderation_logs": "1459276812763926568",
+    "ticket_logs": "1459276907412721857",
+    "photo_logs": "1459276973624000734",
+    "smartcontrol_logs": "1459277031064731845",
+    "audit_log": "1459277108256964858",
+
+    "bot_health": "1459274300258385941",
+    "console_output": "1459274376032551135",
+    "system_logs": "1459274440910307541",
+    "error_reports": "1459274505032564997"
+  },
+
+  "roles": {
+    "bot": "1459116371546865841",
+
+    "owner": "1459272176262975653",
+    "admin": "1459272892603695338",
+    "moderator": "1459272944462069962",
+    "staff": "1459272987583971452",
+
+    "verified": "1459273245969875091",
+    "private_member": "1459273285962305731",
+    "ticket_holder": "1459273629945561190",
+
+    "muted": "1459303252217565224",
+    "restricted": "1459303335109857390"
+  },
+
+  "vip_access_channels": {
+    "vip_channel_01": "",
+    "vip_channel_02": "",
+    "vip_channel_03": "",
+    "vip_channel_04": "",
+    "vip_channel_05": "",
+    "vip_channel_06": "",
+    "vip_channel_07": "",
+    "vip_channel_08": "",
+    "vip_channel_09": "",
+    "vip_channel_10": "",
+    "vip_channel_11": "",
+    "vip_channel_12": "",
+    "vip_channel_13": "",
+    "vip_channel_14": "",
+    "vip_channel_15": "",
+    "vip_channel_16": "",
+    "vip_channel_17": "",
+    "vip_channel_18": "",
+    "vip_channel_19": "",
+    "vip_channel_20": "",
+    "vip_channel_21": "",
+    "vip_channel_22": "",
+    "vip_channel_23": "",
+    "vip_channel_24": "",
+    "vip_channel_25": "",
+    "vip_channel_26": "",
+    "vip_channel_27": "",
+    "vip_channel_28": "",
+    "vip_channel_29": "",
+    "vip_channel_30": "",
+    "vip_channel_31": "",
+    "vip_channel_32": "",
+    "vip_channel_33": "",
+    "vip_channel_34": "",
+    "vip_channel_35": "",
+    "vip_channel_36": "",
+    "vip_channel_37": "",
+    "vip_channel_38": "",
+    "vip_channel_39": "",
+    "vip_channel_40": "",
+    "vip_channel_41": "",
+    "vip_channel_42": "",
+    "vip_channel_43": "",
+    "vip_channel_44": "",
+    "vip_channel_45": "",
+    "vip_channel_46": "",
+    "vip_channel_47": "",
+    "vip_channel_48": "",
+    "vip_channel_49": "",
+    "vip_channel_50": ""
+  }
 }
