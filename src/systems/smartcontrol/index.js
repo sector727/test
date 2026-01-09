@@ -1,5 +1,8 @@
+const { initSmartControlEngine } = require("./smartControlEngine");
+
 module.exports = {
     initSmartControl(client) {
-        console.log("[SMARTCONTROL] Smart control initialized");
+        initSmartControlEngine(client);
+        console.log("[SMARTCONTROL] SmartControl system initialized");
     }
 };
