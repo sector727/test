@@ -7,23 +7,47 @@ class VIPValidator {
         const attachment = message.attachments.first();
         const userID = message.author.id;
 
-        if (!attachment) return { ok: false, reason: "NO_MEDIA" };
+        // 1. Must have media
+        if (!attachment) {
+            return { ok: false, reason: "NO_MEDIA" };
+        }
 
-        if (!this.client.vip.media.isAllowed(attachment))
+        // 2. Must be image or video
+        if (!this.client.vip.media.isAllowed(attachment)) {
             return { ok: false, reason: "INVALID_TYPE" };
+        }
 
-        const buffer = await attachment.download();
+        // 3. Download buffer (basic approach)
+        const buffer = await this._downloadAttachment(attachment);
+        if (!buffer) {
+            return { ok: false, reason: "UNKNOWN" };
+        }
 
-        if (await this.client.vip.duplicates.isDuplicate(buffer, userID))
+        // 4. Duplicate check
+        if (await this.client.vip.duplicates.isDuplicate(buffer, userID)) {
             return { ok: false, reason: "DUPLICATE" };
+        }
 
-        if (await this.client.vip.internet.isFromInternet(attachment))
+        // 5. Internet content check (placeholder)
+        if (await this.client.vip.internet.isFromInternet(attachment)) {
             return { ok: false, reason: "INTERNET_CONTENT" };
+        }
 
-        if (await this.client.vip.ai.isAI(attachment))
+        // 6. AI detection (placeholder)
+        if (await this.client.vip.ai.isAI(attachment)) {
             return { ok: false, reason: "AI_CONTENT" };
+        }
 
         return { ok: true };
+    }
+
+    async _downloadAttachment(attachment) {
+        try {
+            const res = await fetch(attachment.url);
+            return Buffer.from(await res.arrayBuffer());
+        } catch {
+            return null;
+        }
     }
 }
 
