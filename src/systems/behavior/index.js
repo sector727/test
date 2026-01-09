@@ -1,5 +1,8 @@
+const { initBehaviorEngine } = require("./behaviorEngine");
+
 module.exports = {
     initBehaviorSystem(client) {
-        console.log("[BEHAVIOR] Behavior scoring initialized");
+        initBehaviorEngine(client);
+        console.log("[BEHAVIOR] Behavior system initialized");
     }
 };
