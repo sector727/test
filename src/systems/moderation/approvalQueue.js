@@ -1,11 +1,25 @@
+const crypto = require("crypto");
+
 class ApprovalQueue {
     constructor(client) {
         this.client = client;
         this.queue = new Map();
+        this.expireAfter = 5 * 60 * 1000; // 5 minutes
     }
 
-    async requestApproval(actionID, payload) {
-        this.queue.set(actionID, payload);
+    createActionID() {
+        return crypto.randomBytes(8).toString("hex");
+    }
+
+    async requestApproval(action, payload) {
+        const actionID = this.createActionID();
+
+        this.queue.set(actionID, {
+            action,
+            payload,
+            created: Date.now(),
+            status: "PENDING"
+        });
 
         const channel = await this.client.channels.fetch(
             this.client.config.channels.approvals
@@ -13,7 +27,12 @@ class ApprovalQueue {
 
         const embed = {
             title: "Moderation Approval Required",
-            description: `Action ID: **${actionID}**\nUser: <@${payload.user}>`,
+            description: [
+                `**Action ID:** ${actionID}`,
+                `**User:** <@${payload.user}>`,
+                `**Action:** ${action}`,
+                `**Reason:** ${payload.reason || "None provided"}`
+            ].join("\n"),
             color: 0xffa500,
             timestamp: new Date()
         };
@@ -31,6 +50,28 @@ class ApprovalQueue {
 
     remove(actionID) {
         this.queue.delete(actionID);
+    }
+
+    isExpired(entry) {
+        return Date.now() - entry.created > this.expireAfter;
+    }
+
+    expireOld() {
+        for (const [id, entry] of this.queue.entries()) {
+            if (this.isExpired(entry)) {
+                this.queue.delete(id);
+
+                this.client.logging.writer.write(
+                    "MODERATION",
+                    this.client.logging.formatter.moderation(
+                        "APPROVAL_EXPIRED",
+                        entry.payload.user,
+                        "SYSTEM",
+                        "Approval request expired"
+                    )
+                );
+            }
+        }
     }
 }
 
