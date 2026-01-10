@@ -12,7 +12,7 @@ function registerVIPEevents(client) {
             return;
         }
 
-        // Valid submission → reset VIP timer
+        // Valid submission
         client.vip.timer.reset(message.author.id);
         client.emit("vip_submission_valid", message.author.id);
 
@@ -29,12 +29,12 @@ function registerVIPEevents(client) {
 
 async function handleInvalid(message, reason, client) {
     const responses = {
-        NO_MEDIA: "No. You can't renew with air. Attach a **photo or video**.",
-        INVALID_TYPE: "Only **photos or videos**. No text, no GIFs, no stickers, no memes.",
-        DUPLICATE: "Nice try. You've already used that one. New content only.",
-        INTERNET_CONTENT: "If the internet has seen it, I don't want it. Use **your own** photos/videos.",
-        AI_CONTENT: "AI doesn't count as a life experience. Real photos, real videos, or nothing.",
-        UNKNOWN: "Something about that was off. Try again with a valid photo or video."
+        NO_MEDIA: "You forgot the actual photo/video. Try again.",
+        INVALID_TYPE: "Only **photos or videos**. No text, no GIFs, no memes.",
+        DUPLICATE: "You've already used that one. New content only.",
+        INTERNET_CONTENT: "Internet photos don't count. Use **your own** content.",
+        AI_CONTENT: "AI doesn't count as a real experience. Try again.",
+        UNKNOWN: "Something about that wasn't valid. Try again."
     };
 
     const msg = responses[reason] || responses.UNKNOWN;
