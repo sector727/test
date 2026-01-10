@@ -4,7 +4,13 @@ class AIDetector {
     }
 
     async isAI(attachment) {
-        // Placeholder — real logic added later
+        const url = attachment.url.toLowerCase();
+
+        // Common AI filename patterns
+        const aiPatterns = ["midjourney", "stable", "sdxl", "ai_", "_ai"];
+
+        if (aiPatterns.some(p => url.includes(p))) return true;
+
         return false;
     }
 }
