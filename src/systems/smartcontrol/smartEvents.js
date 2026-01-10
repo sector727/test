@@ -4,13 +4,13 @@ function registerSmartEvents(client) {
 
         const userID = message.author.id;
 
-        // Cooldown check
+        // 1. Cooldown check
         if (client.smart.cooldowns.isOnCooldown(userID)) {
             message.delete().catch(() => {});
             return;
         }
 
-        // Pattern analysis
+        // 2. Pattern detection
         const pattern = client.smart.patterns.analyze(message);
         if (pattern) {
             client.behavior.score.add(userID, 10, `Pattern detected: ${pattern}`);
@@ -24,16 +24,16 @@ function registerSmartEvents(client) {
                 )
             );
 
-            client.smart.responder.send(message);
-            client.smart.cooldowns.apply(userID);
+            await client.smart.responder.send(message, pattern);
+            client.smart.cooldowns.apply(userID, pattern);
             return;
         }
 
-        // Behavior score warnings
+        // 3. Behavior score warnings
         const score = client.behavior.score.get(userID);
         if (score >= 30) {
-            client.smart.responder.send(message);
-            client.smart.cooldowns.apply(userID);
+            await client.smart.responder.send(message);
+            client.smart.cooldowns.apply(userID, "behavior_score");
         }
     });
 }
