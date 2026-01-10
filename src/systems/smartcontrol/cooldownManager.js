@@ -1,28 +1,41 @@
 class CooldownManager {
     constructor(client) {
         this.client = client;
-        this.cooldowns = new Map(); // userID -> timestamp
+        this.cooldowns = new Map(); // userID -> { until, reason }
     }
 
     isOnCooldown(userID) {
-        const now = Date.now();
-        const until = this.cooldowns.get(userID) || 0;
-        return now < until;
+        const entry = this.cooldowns.get(userID);
+        if (!entry) return false;
+
+        return Date.now() < entry.until;
     }
 
-    apply(userID) {
+    apply(userID, reason = "general") {
         const score = this.client.behavior.score.get(userID);
 
-        // Base cooldown: 3 seconds
-        let duration = 3000;
+        // Base cooldown: 2 seconds
+        let duration = 2000;
 
-        // Increase cooldown based on behavior score
-        if (score >= 30) duration = 5000;
-        if (score >= 50) duration = 8000;
-        if (score >= 70) duration = 12000;
-        if (score >= 90) duration = 20000;
+        // Behavior-based scaling
+        if (score >= 20) duration = 4000;
+        if (score >= 40) duration = 7000;
+        if (score >= 60) duration = 12000;
+        if (score >= 80) duration = 20000;
 
-        this.cooldowns.set(userID, Date.now() + duration);
+        this.cooldowns.set(userID, {
+            until: Date.now() + duration,
+            reason
+        });
+
+        this.client.logging.writer.write(
+            "SMARTCONTROL",
+            this.client.logging.formatter.smart(
+                "COOLDOWN_APPLIED",
+                userID,
+                `Cooldown applied for ${duration}ms (${reason})`
+            )
+        );
     }
 }
 
