@@ -6,12 +6,19 @@ class RaidDetector {
         this.limit = 5; // 5 joins in 10 seconds
     }
 
-    check() {
+    check(member) {
         const now = Date.now();
         this.joins = this.joins.filter(t => now - t < this.window);
         this.joins.push(now);
 
-        return this.joins.length >= this.limit;
+        // Burst join raid
+        if (this.joins.length >= this.limit) return "BURST_RAID";
+
+        // Suspicious account age
+        const created = member.user.createdTimestamp;
+        if (Date.now() - created < 1000 * 60 * 60 * 24) return "NEW_ACCOUNT_RAID";
+
+        return null;
     }
 }
 
