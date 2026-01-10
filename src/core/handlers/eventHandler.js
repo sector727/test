@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 function loadEvents(client) {
-    const eventsPath = path.join(__dirname, "../events");
+    const eventsPath = __dirname; // load events from this folder
     const files = fs.readdirSync(eventsPath).filter(f => f.endsWith(".js"));
 
     for (const file of files) {
