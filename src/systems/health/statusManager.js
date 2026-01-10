@@ -12,6 +12,8 @@ class StatusManager {
             behavior: "OK",
             smartcontrol: "OK"
         };
+
+        this.messageId = null; // store the health message ID
     }
 
     set(subsystem, status) {
@@ -37,7 +39,20 @@ class StatusManager {
             timestamp: new Date()
         };
 
-        channel.send({ embeds: [embed] });
+        try {
+            // If we already have a message ID, try editing it
+            if (this.messageId) {
+                const msg = await channel.messages.fetch(this.messageId);
+                await msg.edit({ embeds: [embed] });
+                return;
+            }
+        } catch {
+            // If fetch/edit fails, fall through and create a new one
+        }
+
+        // Create a new message and store its ID
+        const newMsg = await channel.send({ embeds: [embed] });
+        this.messageId = newMsg.id;
     }
 
     _color() {
