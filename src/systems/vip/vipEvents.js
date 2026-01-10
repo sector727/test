@@ -28,20 +28,31 @@ function registerVIPEevents(client) {
 }
 
 async function handleInvalid(message, reason, client) {
+    // 🔥 Slightly nastier profanity-safe pack
     const responses = {
-        NO_MEDIA: "You forgot the actual photo/video. Try again.",
-        INVALID_TYPE: "Only **photos or videos**. No text, no GIFs, no memes.",
-        DUPLICATE: "You've already used that one. New content only.",
-        INTERNET_CONTENT: "Internet photos don't count. Use **your own** content.",
-        AI_CONTENT: "AI doesn't count as a real experience. Try again.",
-        UNKNOWN: "Something about that wasn't valid. Try again."
+        NO_MEDIA:
+            "You posted **nothing** to a media-only channel. I can’t even be mad, I’m just disappointed. Photo or video. Now.",
+        INVALID_TYPE:
+            "This isn’t a shitpost channel. No text walls, no stickers, no GIF spam. **Photo or video**, or get out.",
+        DUPLICATE:
+            "Recycling old content like nobody would notice? I notice everything. **New content**, not reruns.",
+        INTERNET_CONTENT:
+            "That’s clearly off the internet. Stock, stolen, or saved — doesn’t matter. **Your content or no VIP.**",
+        AI_CONTENT:
+            "AI again. You really tried to outsource your existence. **Real human content only**, not neural net fanfic.",
+        UNKNOWN:
+            "Whatever you uploaded confused even me. Delete it from your camera roll and try something that actually makes sense."
     };
 
     const msg = responses[reason] || responses.UNKNOWN;
 
+    // Delete the invalid message
     await message.delete().catch(() => {});
+
+    // DM the user the nasty-but-safe response
     await message.author.send(msg).catch(() => {});
 
+    // Log the rejection
     client.logging.writer.write(
         "PHOTOS",
         client.logging.formatter.photo(
