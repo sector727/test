@@ -3,48 +3,57 @@ function registerBehaviorEvents(client) {
         if (message.author.bot) return;
 
         const userID = message.author.id;
+        const content = message.content;
 
-        // Spam detection
-        if (client.behavior.spam.check(userID)) {
-            const score = client.behavior.score.add(userID, 10, "Spam detected");
+        // 1. Spam detection
+        const spamType = client.behavior.spam.check(userID, content);
+        if (spamType) {
+            client.behavior.score.add(userID, 10, spamType);
 
             client.logging.writer.write(
                 "SMARTCONTROL",
                 client.logging.formatter.smart(
                     "SPAM_DETECTED",
                     userID,
-                    `Score increased to ${score}`
+                    spamType
                 )
             );
         }
 
-        // Abuse detection
-        if (client.behavior.abuse.check(message)) {
-            const score = client.behavior.score.add(userID, 20, "Abusive language");
+        // 2. Abuse detection
+        const abuseType = client.behavior.abuse.check(message);
+        if (abuseType) {
+            client.behavior.score.add(userID, 20, abuseType);
 
             client.logging.writer.write(
                 "SMARTCONTROL",
                 client.logging.formatter.smart(
                     "ABUSE_DETECTED",
                     userID,
-                    `Score increased to ${score}`
+                    abuseType
                 )
             );
         }
     });
 
     client.on("guildMemberAdd", member => {
-        if (client.behavior.raid.check()) {
+        const raidType = client.behavior.raid.check(member);
+        if (raidType) {
             client.logging.writer.write(
                 "SMARTCONTROL",
                 client.logging.formatter.smart(
                     "RAID_DETECTED",
                     member.id,
-                    "Multiple joins detected"
+                    raidType
                 )
             );
         }
     });
+
+    // Score decay every minute
+    setInterval(() => {
+        client.behavior.score.decay();
+    }, 60000);
 }
 
 module.exports = { registerBehaviorEvents };
