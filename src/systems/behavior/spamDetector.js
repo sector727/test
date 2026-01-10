@@ -6,7 +6,7 @@ class SpamDetector {
         this.limit = 5; // 5 messages in 5 seconds
     }
 
-    check(userID) {
+    check(userID, content) {
         const now = Date.now();
         const timestamps = this.cache.get(userID) || [];
 
@@ -15,7 +15,23 @@ class SpamDetector {
 
         this.cache.set(userID, filtered);
 
-        return filtered.length >= this.limit;
+        // Burst spam
+        if (filtered.length >= this.limit) return "BURST_SPAM";
+
+        // Ping spam
+        if (content.includes("@")) return "PING_SPAM";
+
+        // Emoji spam
+        const emojiCount = [...content].filter(c => /\p{Emoji}/u.test(c)).length;
+        if (emojiCount > 10) return "EMOJI_SPAM";
+
+        // Copy/paste spam
+        if (content.length > 0 && filtered.length >= 3) {
+            const lastThree = filtered.slice(-3);
+            if (lastThree.length === 3) return "REPEATED_SPAM";
+        }
+
+        return null;
     }
 }
 
