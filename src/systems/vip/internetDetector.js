@@ -4,7 +4,15 @@ class InternetDetector {
     }
 
     async isFromInternet(attachment) {
-        // Placeholder — real logic added later
+        const url = attachment.url.toLowerCase();
+
+        // If Discord CDN URL contains "external"
+        if (url.includes("external")) return true;
+
+        // If filename contains stock photo patterns
+        const suspicious = ["stock", "pexels", "unsplash", "getty"];
+        if (suspicious.some(s => url.includes(s))) return true;
+
         return false;
     }
 }
