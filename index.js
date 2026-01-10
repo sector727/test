@@ -59,8 +59,4 @@ client.once("ready", async () => {
 // Load events BEFORE login
 loadEvents(client);
 
-// Login
-client.login(config.bot.token);
-
-// Login
-client.login(config.bot.token);
+client.login(process.env.DISCORD_TOKEN);
