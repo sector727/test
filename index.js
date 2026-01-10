@@ -5,7 +5,6 @@ const config = require("./config/config.json");
 
 // Core loaders
 const { loadEvents } = require("./src/core/handlers/eventHandler");
-const { loadCommands } = require("./src/core/handlers/commandHandler");
 const { validateConfig } = require("./src/core/startup/configValidator");
 
 // Subsystems
@@ -57,9 +56,11 @@ client.once("ready", async () => {
     console.log("[STARTUP] All systems online.");
 });
 
-// Load commands + events BEFORE login
+// Load events BEFORE login
 loadEvents(client);
-loadCommands(client);
+
+// Login
+client.login(config.bot.token);
 
 // Login
 client.login(config.bot.token);
