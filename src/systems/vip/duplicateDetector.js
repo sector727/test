@@ -21,8 +21,12 @@ class DuplicateDetector {
         fs.writeFileSync(this.file, JSON.stringify(this.hashes, null, 2));
     }
 
+    sha256(buffer) {
+        return crypto.createHash("sha256").update(buffer).digest("hex");
+    }
+
     async isDuplicate(buffer, userID) {
-        const hash = crypto.createHash("sha256").update(buffer).digest("hex");
+        const hash = this.sha256(buffer);
 
         if (!this.hashes[userID]) this.hashes[userID] = [];
 
